@@ -1,1 +1,26 @@
+---
+# Custom styles for Chirpy
+---
+@import "main";
+/* 1. Hide the left sidebar on post pages */
+html[data-layout="post"] #sidebar {
+  display: none !important;
+}
 
+/* 2. Remove the left margin from the main content wrapper */
+html[data-layout="post"] #main-wrapper {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* 3. Align the top bar to the left edge */
+html[data-layout="post"] #topbar-wrapper {
+  left: 0 !important;
+  width: 100% !important;
+}
+
+/* 4. Optional: Center the content for better readability */
+html[data-layout="post"] #main-wrapper > .container {
+  max-width: 900px; /* Adjust this value to your liking */
+  margin: 0 auto;
+}
