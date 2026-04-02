@@ -7,9 +7,7 @@ tags: [jwt, json-web-token, authentication-bypass, bug-bounty, penetration-testi
 pin: true
 math: false
 mermaid: true
-image:
-  path: /assets/img/posts/jwt-attacks-banner.png
-  alt: "JWT Attack Vectors Illustration"
+
 ---
 
 ## JWT Anatomy & Attack Surface
