@@ -5,7 +5,7 @@ categories: [Malware Development, Red Team]
 tags: [shellcode, malware-development, windows-defender-bypass, edr-evasion, c-cpp, syscalls, process-injection, encryption, xor, aes, amsi-bypass, etw-patch, red-team]
 description: "A comprehensive guide to shellcode development in C/C++ — from understanding what shellcode is, through basic execution techniques, to advanced EDR/AV bypass methods including direct syscalls, indirect syscalls, sleep obfuscation, and process injection. Covers Windows 10 and 11 protections up to 2026."
 image:
-  path: /assets/img/posts/shellcode.png
+  path: /assets/posts/shellcode.png
   alt: Shellcode Development Zero to Advanced
 pin: true
 math: true
