@@ -1,7 +1,7 @@
 ---
 title: "File Transfer Between Windows & Linux — 5 Battle-Tested Methods"
 description: "Complete guide to uploading and downloading files between Windows and Linux using SMB, SCP/SFTP, Python HTTP, FTP, and Netcat. Step-by-step commands, real outputs, and architecture diagrams."
-date: 2024-02-18 10:00:00 +0000
+date: 2026-04-01 10:00:00 +0000
 categories: [System Administration, Red Team, OSCP, Network Operations]
 tags: [file-transfer, smb, scp, sftp, python-http, ftp, netcat, windows-linux, oscp]
 pin: true
