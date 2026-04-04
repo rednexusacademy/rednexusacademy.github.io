@@ -5,7 +5,7 @@ categories: [Windows, Privilege Escalation]
 tags: [windows, lpe, red-team, privilege-escalation, kernel, token, uac-bypass, dll-hijacking, potato, impacket, mimikatz, cve, active-directory, post-exploitation]
 description: "The most comprehensive Windows LPE guide ever written — covering 100+ techniques from kernel exploits, token abuse, the entire Potato family, UAC bypasses, DLL hijacking, service misconfigs, COM hijacking, credential hunting, and every major CVE up to 2026."
 image:
-  path: /assets/img/posts/windows-lpe/lpe.png
+  path: /assets/img/posts/lpe.png
   alt: "Windows Local Privilege Escalation — The Complete Guide"
 pin: true
 toc: true
