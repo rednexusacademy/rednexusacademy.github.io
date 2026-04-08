@@ -5,7 +5,7 @@ categories: [Red Team, CRTP]
 tags: [privilege-escalation, powerup, jenkins, gpoddity, inveigh, active-directory, windows, crtp]
 description: "A comprehensive guide covering Windows service privilege escalation with PowerUp, automated privesc checks, Jenkins Groovy exploitation, GPOddity GPO abuse, and Inveigh LNK-based hash capture — all from the CRTP perspective."
 image:
-  path: /assets/img/headers/privesc-banner.png
+  path: /assets/img/posts/crtplpe.png
   alt: "Privilege Escalation & Lateral Movement"
 pin: true
 math: true
