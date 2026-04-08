@@ -5,7 +5,7 @@ categories: [Red Team, CRTP]
 tags: [lateral-movement, psremoting, winrm, credential-extraction, dcsync, overpass-the-hash, active-directory, windows, crtp]
 description: "A comprehensive guide covering PowerShell Remoting (One-to-One & One-to-Many), credential extraction from LSASS and beyond, DCSync attacks, and Over-Pass-the-Hash — all from the CRTP perspective with detailed examples and outputs."
 image:
-  path: /assets/img/headers/lateral-movement-banner.png
+  path: /assets/img/posts/lateralmovement.png
   alt: "Lateral Movement & Credential Extraction"
 pin: true
 math: true
