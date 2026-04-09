@@ -4,9 +4,6 @@ date: 2026-04-10 01:00:00 +0200
 categories: [Red Team, CRTP]
 tags: [adminsdholder, sdprop, acl-abuse, persistence, dcsync, domain-admins, active-directory, windows, crtp]
 description: "A comprehensive guide covering AdminSDHolder persistence via ACL manipulation, SDProp propagation, granular permission abuse (ResetPassword, WriteMembers), Domain Root FullControl, and DCSync — the crown jewel of AD persistence — all from the CRTP perspective."
-image:
-  path: /assets/img/headers/adminsdholder-banner.png
-  alt: "AdminSDHolder Persistence & ACL Abuse"
 pin: true
 math: true
 mermaid: true
