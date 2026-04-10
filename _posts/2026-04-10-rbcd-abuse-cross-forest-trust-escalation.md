@@ -1077,7 +1077,7 @@ Dollarcorp DAs can read this!
 - [RBCD Exploitation — Redfox Cybersecurity](https://www.redfoxsec.com/blog/resource-based-constrained-delegation-rbcd-attack-how-attackers-exploit-active-directory-trust)
 - [Kerberos Trust Abuse — The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/inter-realm-tgt)
 - [Trust Key Extraction and Forged Tickets — CRTP Notes](https://dev-angelist.gitbook.io/crtp-notes/readme/network-security-6/8.7-persistence-via-acls)
-- [SID History Attack in Active Directory Trusts — Harmj0y](http://blog.harmj0y.net/activedirectory/a-guide-to-attacking-domain-trusts/)
+- [SID History Attack in Active Directory Trusts — Harmj0y](https://blog.harmj0y.net/activedirectory/a-guide-to-attacking-domain-trusts/)
 - [Golden Ticket Across Trusts — Sean Metcalf](https://adsecurity.org/?p=1772)
 - [Cross-Forest Trust Abuse — Penetration Testing Lab](https://pentestlab.blog/2022/04/11/domain-persistence-forged-tickets/)
 - [Rubeus — GhostPack (GitHub)](https://github.com/GhostPack/Rubeus)
