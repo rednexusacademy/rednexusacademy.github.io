@@ -4,9 +4,6 @@ date: 2026-04-10 02:00:00 +0200
 categories: [Red Team, CRTP]
 tags: [kerberos, delegation, unconstrained, constrained, rbcd, s4u, rubeus, active-directory, windows, crtp]
 description: "A comprehensive guide covering all three Kerberos delegation types — Unconstrained Delegation with Printer Bug, Constrained Delegation with S4U abuse and altservice trick, and Resource-Based Constrained Delegation (RBCD) — with step-by-step PowerShell exploitation."
-image:
-  path: /assets/img/posts/delegation.png
-  alt: "Kerberos Delegation Attacks"
 pin: true
 math: true
 mermaid: true
