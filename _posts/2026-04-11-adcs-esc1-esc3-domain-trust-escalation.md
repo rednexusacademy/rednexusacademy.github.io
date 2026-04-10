@@ -4,6 +4,8 @@ date: 2026-04-11 01:00:00 +0200
 categories: [Red Team, CRTP]
 tags: [adcs, esc1, esc3, certificates, pkinit, certify, rubeus, privilege-escalation, enterprise-admin, cross-domain]
 description: "Abuse Active Directory Certificate Services misconfigurations (ESC1 and ESC3) to escalate from a low-privileged user to Domain Admin and Enterprise Admin across domain trusts."
+image:
+  path: /assets/img/posts/csr.png
 pin: false
 math: false
 mermaid: false
