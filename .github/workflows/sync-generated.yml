@@ -2,7 +2,7 @@ name: 🔄 Sync Generated JS Files to React Repo (Test)
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main,test-github-workfow ]
     paths:
       - '_posts/**.md'          # Trigger only when markdown blog posts change
       - 'pythonScript/**'       # Or when the script itself is updated
