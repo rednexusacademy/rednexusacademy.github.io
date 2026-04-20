@@ -8,7 +8,7 @@ Generates individual {slug}.js files and a metadata index.
 import json
 import os
 import re
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 import frontmatter
@@ -37,15 +37,21 @@ def process_markdown_file(file_path: Path, post_id: int) -> dict:
     # Metadata extraction
     title = metadata.get("title", "Untitled")
     description = metadata.get("description", "")
-    date_str = metadata.get("date", "")
-    if isinstance(date_str, datetime):
-        date_str = date_str.strftime("%b %d, %Y")
-    elif not date_str:
+    date_val = metadata.get("date", "")
+    if isinstance(date_val, (datetime, date)):
+        # Both datetime and date have strftime
+        date_str = date_val.strftime("%b %d, %Y")
+    elif isinstance(date_val, str):
+        date_str = date_val
+    else:
+        date_str = ""
+
+    if not date_str:
         # Fallback: extract date from filename
         match = re.match(r"^(\d{4}-\d{2}-\d{2})", file_path.name)
         if match:
             date_str = datetime.strptime(match.group(1), "%Y-%m-%d").strftime("%b %d, %Y")
-
+        
     categories = metadata.get("categories", [])
     if isinstance(categories, str):
         categories = [categories]
