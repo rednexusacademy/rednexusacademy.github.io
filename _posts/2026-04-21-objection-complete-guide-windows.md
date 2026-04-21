@@ -239,6 +239,7 @@ root
 pip install frida==16.5.9
 pip install frida-tools==12.5.0
 pip install objection==1.11.0
+python -m pip install --user "setuptools<82"
 ```
 ```
 Collecting frida==16.5.9
