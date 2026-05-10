@@ -25,7 +25,7 @@
 15. [Technique 13 — Windows Kernel Pool/Heap Overflow](#technique-13--windows-kernel-poolheap-overflow)
 16. [Technique 14 — Use-After-Free in Kernel Drivers (e.g. CLFS CVE-2025-32701)](#technique-14--use-after-free-in-kernel-drivers-eg-clfs-cve-2025-32701)
 17. [Technique 15 — Kernel Race Condition Exploitation](#technique-15--kernel-race-condition-exploitation)
-18. [Technique 16 — PatchGuard (KPP) Bypass — GhostHook / InfinityHook / ByePg](#technique-16--patchguard-kpp-bypass--ghosthook--infinityhook--byepg)
+18. [Technique 16 — PatchGuard (KPP) Bypass — GhostHook / InfinityHook / ByePg]()
 19. [Technique 17 — Windows Downdate / OS Downgrade Attack](#technique-17--windows-downdate--os-downgrade-attack)
 20. [Technique 18 — Kernel Callback Hijacking via DKOM Code Caves](#technique-18--kernel-callback-hijacking-via-dkom-code-caves)
 21. [Technique 19 — SMEP / SMAP Bypass for Kernel Code Execution](#technique-19--smep--smap-bypass-for-kernel-code-execution)
