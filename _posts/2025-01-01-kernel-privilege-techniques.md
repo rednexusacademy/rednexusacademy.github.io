@@ -25,7 +25,7 @@
 15. [Technique 13 — Windows Kernel Pool/Heap Overflow](#technique-13--windows-kernel-poolheap-overflow)
 16. [Technique 14 — Use-After-Free in Kernel Drivers (e.g. CLFS CVE-2025-32701)](#technique-14--use-after-free-in-kernel-drivers-eg-clfs-cve-2025-32701)
 17. [Technique 15 — Kernel Race Condition Exploitation](#technique-15--kernel-race-condition-exploitation)
-18. [Technique 16 — PatchGuard (KPP) Bypass — GhostHook / InfinityHook / ByePg]()
+18. [Technique 16 — PatchGuard (KPP) Bypass — GhostHook / InfinityHook / ByePg](#technique-16--patchguard-kpp-bypass--ghosthook--infinityhook--byepg)
 19. [Technique 17 — Windows Downdate / OS Downgrade Attack](#technique-17--windows-downdate--os-downgrade-attack)
 20. [Technique 18 — Kernel Callback Hijacking via DKOM Code Caves](#technique-18--kernel-callback-hijacking-via-dkom-code-caves)
 21. [Technique 19 — SMEP / SMAP Bypass for Kernel Code Execution](#technique-19--smep--smap-bypass-for-kernel-code-execution)
@@ -37,7 +37,7 @@
 
 ## Understanding the Threat Surface
 
-Gaining **kernel-level privileges** on Windows is the holy grail of post-exploitation. A kernel implant runs in **Ring 0** — the same privilege ring as the operating system itself. From there, an attacker can:
+Gaining **kernel-level privileges** on Windows is the holy grail of post-exploitation. A kernel implant runs in **Ring 0** — the same privilege ring as the operating system itself. From there, a[...]
 
 - Terminate, blind, or manipulate any process (including EDR/AV)
 - Install persistent rootkits invisible to user-land tools
@@ -46,19 +46,19 @@ Gaining **kernel-level privileges** on Windows is the holy grail of post-exploit
 - Escalate any process token to `NT AUTHORITY\SYSTEM`
 - Bypass virtually all user-mode and kernel-mode security products
 
-The primary gate protecting this surface is **Driver Signature Enforcement (DSE)**, combined with **PatchGuard (KPP)**, **HVCI**, and **Secure Boot**. The techniques in this document describe how each layer is attacked.
+The primary gate protecting this surface is **Driver Signature Enforcement (DSE)**, combined with **PatchGuard (KPP)**, **HVCI**, and **Secure Boot**. The techniques in this document describe how [...]
 
 ---
 
 ## Architecture Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────…[...]
 │                        USER MODE (Ring 3)                        │
 │   Applications │ Malware │ Admin Tools │ Security Products       │
-└────────────────────────────┬────────────────────────────────────┘
+└────────────────────────────┬───────────────────────────────────…[...]
                              │  syscall / IOCTL
-┌────────────────────────────▼────────────────────────────────────┐
+┌────────────────────────────▼───────────────────────────────────…[...]
 │                      KERNEL MODE (Ring 0)                        │
 │                                                                  │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────────┐   │
@@ -70,12 +70,12 @@ The primary gate protecting this surface is **Driver Signature Enforcement (DSE)
 │  │               Kernel Data Structures                      │   │
 │  │  EPROCESS  │  ETHREAD  │  Token  │  Callbacks  │  SSDT   │   │
 │  └──────────────────────────────────────────────────────────┘   │
-└────────────────────────────┬────────────────────────────────────┘
+└────────────────────────────┬───────────────────────────────────…[...]
                              │
-┌────────────────────────────▼────────────────────────────────────┐
+┌────────────────────────────▼───────────────────────────────────…[...]
 │                    HYPERVISOR / VBS (Ring -1)                    │
 │             HVCI │ Credential Guard │ SecureKernel.exe           │
-└─────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────…[...]
 ```
 
 ### Key Security Features & Attacker Goals
@@ -95,18 +95,18 @@ The primary gate protecting this surface is **Driver Signature Enforcement (DSE)
 
 ### Concept
 
-**Windows Hardware Quality Labs (WHQL)** is Microsoft's official certification program for drivers. A driver signed through WHQL receives a **Microsoft attestation signature**, making it trusted by Windows without requiring any bypass. An attacker who builds a driver that appears legitimate can submit it through the **Windows Hardware Compatibility Program (WHCP)** portal.
+**Windows Hardware Quality Labs (WHQL)** is Microsoft's official certification program for drivers. A driver signed through WHQL receives a **Microsoft attestation signature**, making it trusted b[...]
 
 ```
-┌─────────────────┐      ┌───────────────────┐      ┌──────────────────────┐
+┌─────────────────┐      ┌───────────────────┐      ┌────────────────────[...]
 │  Attacker builds │─────▶│  Submit to WHCP   │─────▶│  Microsoft signs it  │
 │  "legitimate"   │      │  (HLK test pass)  │      │  via Attestation     │
 │  .sys driver    │      └───────────────────┘      └──────────┬───────────┘
 └─────────────────┘                                             │
-                                                    ┌───────────▼───────────┐
-                                                    │  Trusted signed driver │
-                                                    │  loads on any Windows  │
-                                                    └────────────────────────┘
+                                                     ┌───────────▼───────────┐
+                                                     │  Trusted signed driver │
+                                                     │  loads on any Windows  │
+                                                     └────────────────────────┘
 ```
 
 ### Steps
@@ -129,10 +129,10 @@ Microsoft's attestation signing validates that the driver passes HLK tests and i
 
 ### Concept
 
-**BYOVD** is the most widely used kernel attack in modern red teaming and APT operations. The attacker does **not** create a malicious driver — instead, they bring a **legitimate, signed** driver from a real vendor that contains a known vulnerability. They load this trusted driver, then exploit the vulnerability to execute code in kernel space.
+**BYOVD** is the most widely used kernel attack in modern red teaming and APT operations. The attacker does **not** create a malicious driver — instead, they bring a **legitimate, signed** driv[...]
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                        BYOVD Attack Flow                            │
 │                                                                     │
 │  [User Space]                                                       │
@@ -147,7 +147,7 @@ Microsoft's attestation signing validates that the driver passes HLK tests and i
 │                                                        │            │
 │                                                        ▼            │
 │  Overwrite EPROCESS.Token ──▶ Escalate to SYSTEM ✓                 │
-└─────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Popular BYOVD Drivers
@@ -203,10 +203,10 @@ HANDLE hDriver = CreateFileW(
 
 ### Concept
 
-`kdmapper` takes BYOVD one step further. It uses a signed vulnerable driver (`iqvw64e.sys` — Intel NIC driver) as a **loader** to manually map an entirely unsigned, arbitrary kernel driver into memory — completely bypassing DSE without touching the standard driver loading path.
+`kdmapper` takes BYOVD one step further. It uses a signed vulnerable driver (`iqvw64e.sys` — Intel NIC driver) as a **loader** to manually map an entirely unsigned, arbitrary kernel driver into[...]
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                     kdmapper Flow                                │
 │                                                                  │
 │  [User Mode]                                                     │
@@ -224,7 +224,7 @@ HANDLE hDriver = CreateFileW(
 │                             │                                    │
 │                             ▼                                    │
 │  evil.sys running in Ring 0 — NOT in driver list (hidden)       │
-└──────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Key Advantage
@@ -253,10 +253,10 @@ kdmapper.exe evil_driver.sys
 
 ### Concept
 
-`ci.dll` (Code Integrity DLL) is the Windows component responsible for **Driver Signature Enforcement**. It parses security catalogues and validates driver signatures before the kernel loads them. Downgrading `ci.dll` to an older, vulnerable version effectively **turns off DSE** while the system appears fully patched.
+`ci.dll` (Code Integrity DLL) is the Windows component responsible for **Driver Signature Enforcement**. It parses security catalogues and validates driver signatures before the kernel loads them[...]
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                    ci.dll Downgrade Attack Chain                    │
 │                                                                     │
 │  STEP 1: VBS Check                                                  │
@@ -283,7 +283,7 @@ kdmapper.exe evil_driver.sys
 │  STEP 5: Load unsigned driver freely                                │
 │  sc create evil type=kernel binPath=evil.sys                        │
 │  sc start evil → Loads without signature check                      │
-└─────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Registry Steps
@@ -310,10 +310,10 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" `
 
 ### Concept
 
-Documented by Gabriel Landau (Elastic Security Labs) in July 2024, this technique exploits a **race condition** in Windows' security catalogue verification process. When the kernel is in the process of validating a catalogue file, an attacker races to **replace the file** with a malicious version containing an Authenticode signature for an unsigned driver.
+Documented by Gabriel Landau (Elastic Security Labs) in July 2024, this technique exploits a **race condition** in Windows' security catalogue verification process. When the kernel is in the proc[...]
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                 ItsNotASecurityBoundary Race Window                  │
 │                                                                      │
 │  Thread 1 (Kernel):                                                  │
@@ -325,7 +325,7 @@ Documented by Gabriel Landau (Elastic Security Labs) in July 2024, this techniqu
 │  Replace catalogue.cat ──▶ malicious.cat (signed for evil.sys)      │
 │                                                                      │
 │  Result: Kernel reads malicious catalogue → loads evil.sys ✓        │
-└──────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Steps
@@ -344,7 +344,7 @@ Documented by Gabriel Landau (Elastic Security Labs) in July 2024, this techniqu
 
 ### Concept
 
-**TestSigning mode** is a legitimate Microsoft feature for driver developers. When enabled, Windows allows **any** driver signed with **any** certificate — including self-signed ones — to load. This is the simplest DSE bypass requiring only administrator privileges.
+**TestSigning mode** is a legitimate Microsoft feature for driver developers. When enabled, Windows allows **any** driver signed with **any** certificate — including self-signed ones — to loa[...]
 
 ```
 ┌───────────────────────────────────────────────────────────┐
@@ -392,7 +392,7 @@ sc start evil
 
 ### Concept
 
-By design, when a **kernel debugger** is attached at boot, PatchGuard is **not initialized** and DSE is relaxed — unsigned drivers can be loaded by interacting with the debugger prompt. Attackers can abuse this by enabling kernel debugging, then booting in a state where the debugger is "waiting to reconnect" but KD is still attached, giving unsigned driver loading without an active debug session.
+By design, when a **kernel debugger** is attached at boot, PatchGuard is **not initialized** and DSE is relaxed — unsigned drivers can be loaded by interacting with the debugger prompt. Attacke[...]
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -434,10 +434,10 @@ bcdedit /dbgsettings net hostip:192.168.1.10 port:50000 key:1.2.3.4
 
 ### Concept
 
-Windows provides an **Advanced Boot Options** menu accessible via **F8 at boot**. One option is "Disable Driver Signature Enforcement" — this disables DSE for the **current boot session only** (non-persistent).
+Windows provides an **Advanced Boot Options** menu accessible via **F8 at boot**. One option is "Disable Driver Signature Enforcement" — this disables DSE for the **current boot session only** [...]
 
 ```
-┌──────────────────────────────────────────────────┐
+┌──────────────────────────────────────────────────────┐
 │          F8 Boot Menu (Advanced Boot)            │
 │                                                  │
 │  > Safe Mode                                     │
@@ -449,7 +449,7 @@ Windows provides an **Advanced Boot Options** menu accessible via **F8 at boot**
 │                                                  │
 │  Effect: DSE = OFF for this session only         │
 │  Reboot = DSE re-enabled                         │
-└──────────────────────────────────────────────────┘
+└──────────────────────────────────────────────────────┘
 ```
 
 ### Steps
@@ -468,7 +468,7 @@ Windows provides an **Advanced Boot Options** menu accessible via **F8 at boot**
 
 ### Concept
 
-Every kernel driver must be signed with a valid Authenticode certificate trusted by Windows. Attackers who obtain **stolen or leaked private keys** from legitimate software vendors can sign malicious drivers that Windows treats as fully trusted.
+Every kernel driver must be signed with a valid Authenticode certificate trusted by Windows. Attackers who obtain **stolen or leaked private keys** from legitimate software vendors can sign malic[...]
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
@@ -504,9 +504,9 @@ signtool sign ^
 signtool verify /pa /v evil_driver.sys
 ```
 
-> **Real-World Example:** The LAPSUS$ group stole NVIDIA code-signing certificates in 2022. Despite being expired, malware signed with them could bypass certain AV products and load on older Windows systems.
+> **Real-World Example:** The LAPSUS$ group stole NVIDIA code-signing certificates in 2022. Despite being expired, malware signed with them could bypass certain AV products and load on older Wind[...]
 
-> **Real-World Example:** Mandiant reported that threat actors abused Microsoft's WHCP attestation signing process using illegitimately obtained EV certificates — the drivers were effectively signed by Microsoft.
+> **Real-World Example:** Mandiant reported that threat actors abused Microsoft's WHCP attestation signing process using illegitimately obtained EV certificates — the drivers were effectively s[...]
 
 ---
 
@@ -514,10 +514,10 @@ signtool verify /pa /v evil_driver.sys
 
 ### Concept
 
-**Extended Validation (EV) certificates** are the highest tier of code-signing certificates, requiring legal business verification. Attackers create **shell companies** with legitimate business registrations to obtain real EV certificates, then use them to submit drivers through Microsoft's attestation signing portal.
+**Extended Validation (EV) certificates** are the highest tier of code-signing certificates, requiring legal business verification. Attackers create **shell companies** with legitimate business r[...]
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                   Fraudulent WHCP Abuse Chain                     │
 │                                                                    │
 │  1. Register shell company  ──▶  Obtain EIN / business license    │
@@ -535,7 +535,7 @@ signtool verify /pa /v evil_driver.sys
 │  5. Microsoft signs driver ──▶ Globally trusted by Windows ✓     │
 │                                                                    │
 │  EV certs on dark web: $2,000–$6,500                             │
-└────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 > **Threat Intel:** Group-IB (July 2025) documented a thriving underground market for EV code-signing certificates, with prices ranging from $2,000 to $6,500 on criminal forums.
@@ -546,10 +546,10 @@ signtool verify /pa /v evil_driver.sys
 
 ### Concept
 
-**DKOM** manipulates kernel data structures directly — without going through official kernel APIs. The primary target is the `EPROCESS` structure, specifically the **doubly-linked list** (`ActiveProcessLinks`) that the Windows Task Manager and process enumeration tools traverse.
+**DKOM** manipulates kernel data structures directly — without going through official kernel APIs. The primary target is the `EPROCESS` structure, specifically the **doubly-linked list** (`Acti[...]
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                    DKOM — Process Hiding                         │
 │                                                                  │
 │  Normal Process List (ActiveProcessLinks):                       │
@@ -560,7 +560,7 @@ signtool verify /pa /v evil_driver.sys
 │                               evil.exe still runs!              │
 │                               Invisible to Task Manager ✓       │
 │                               Invisible to EDR process lists ✓  │
-└──────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### EPROCESS Structure (simplified)
@@ -599,10 +599,10 @@ ULONG TokenOffset = 0x4b8;  // Win10 22H2
 
 ### Concept
 
-Windows access control is built on **tokens**. Every process and thread has a token that defines its privileges and group memberships. Kernel-level token manipulation allows an attacker to copy the `SYSTEM` token into any process.
+Windows access control is built on **tokens**. Every process and thread has a token that defines its privileges and group memberships. Kernel-level token manipulation allows an attacker to copy t[...]
 
 ```
-┌────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │              Kernel Token Theft Flow                           │
 │                                                                │
 │  Find SYSTEM process (PID 4)                                  │
@@ -618,7 +618,7 @@ Windows access control is built on **tokens**. Every process and thread has a to
 │       │                                                        │
 │       ▼                                                        │
 │  All threads in our process now run as SYSTEM ✓               │
-└────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Exploit Steps (via BYOVD arbitrary write)
@@ -645,10 +645,10 @@ CreateProcess(NULL, "cmd.exe", NULL, NULL, FALSE,
 
 ### Concept
 
-The Windows kernel uses a **pool allocator** to manage kernel-mode heap memory. A **pool overflow** corrupts adjacent allocations, allowing attackers to overwrite kernel objects (function pointers, security descriptors, tokens) with controlled data.
+The Windows kernel uses a **pool allocator** to manage kernel-mode heap memory. A **pool overflow** corrupts adjacent allocations, allowing attackers to overwrite kernel objects (function pointer[...]
 
 ```
-┌────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                   Kernel Pool Overflow                             │
 │                                                                    │
 │  Pool Layout (before overflow):                                    │
@@ -664,7 +664,7 @@ The Windows kernel uses a **pool allocator** to manage kernel-mode heap memory. 
 │  └──────────────┴──────────────┴──────────────┘                   │
 │                                                                    │
 │  When hijacked function pointer is called → attacker code runs    │
-└────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Exploitation Steps
@@ -691,10 +691,10 @@ The Windows kernel uses a **pool allocator** to manage kernel-mode heap memory. 
 
 ### Concept
 
-A **Use-After-Free (UAF)** occurs when kernel code frees a memory object but retains a pointer to it. If an attacker can reclaim the freed memory with controlled data before the dangling pointer is used, they can redirect execution or corrupt kernel structures.
+A **Use-After-Free (UAF)** occurs when kernel code frees a memory object but retains a pointer to it. If an attacker can reclaim the freed memory with controlled data before the dangling pointer [...]
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                 Use-After-Free Flow                              │
 │                                                                  │
 │  STEP 1: Object allocated in kernel pool                        │
@@ -710,7 +710,7 @@ A **Use-After-Free (UAF)** occurs when kernel code frees a memory object but ret
 │  STEP 4: Original code uses dangling ptr                        │
 │  call [ptr->func_ptr]  ──▶  calls EVIL_PTR                     │
 │  ──▶  Kernel executes attacker shellcode                        │
-└──────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### CVE-2025-32701 — CLFS Driver UAF (Active Exploitation)
@@ -729,10 +729,10 @@ The **Windows Common Log File System (CLFS)** driver had an actively exploited U
 
 ### Concept
 
-Race conditions occur when the kernel operates on a shared resource from multiple threads without proper synchronization. An attacker wins the race by **timing their operation** to occur between two kernel operations that should be atomic.
+Race conditions occur when the kernel operates on a shared resource from multiple threads without proper synchronization. An attacker wins the race by **timing their operation** to occur between [...]
 
 ```
-┌────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │              Race Condition Exploitation                       │
 │                                                                │
 │  Kernel Thread:                                                │
@@ -745,7 +745,7 @@ Race conditions occur when the kernel operates on a shared resource from multipl
 │                                                                │
 │  Result: CHECK passes with legit data,                        │
 │          USE operates on attacker-modified data               │
-└────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### CVE-2025-62215 — Windows Kernel Race Condition (Nov 2025, Exploited)
@@ -754,10 +754,10 @@ Race conditions occur when the kernel operates on a shared resource from multipl
 Attack flow:
 1. Attacker launches multiple threads simultaneously
 2. Threads race to access the same kernel resource without sync
-3. "Double Free" — same memory block freed twic
-
+3. "Double Free" — same memory block freed twice
 4. Kernel heap corrupted → attacker overwrites memory
 5. Seize execution flow → SYSTEM privileges
+```
 
 ### Steps
 
@@ -770,15 +770,16 @@ Attack flow:
 
 > **CVE-2025-62215** (CVSS 7.0) is a real-world example exploited in the wild as of November 2025 — a race condition in the Windows Kernel allowing local privilege escalation to SYSTEM.
 
+---
 
 ## Technique 16 — PatchGuard (KPP) Bypass — GhostHook / InfinityHook / ByePg
 
 ### Concept
 
-**PatchGuard (Kernel Patch Protection / KPP)** is Microsoft's anti-rootkit mechanism introduced in 64-bit Windows. It periodically checks critical kernel structures (SSDT, IDT, LSTAR MSR, GDT, kernel code sections) and triggers a **BSOD (Bug Check 0x109)** if tampering is detected. Three major bypass techniques have been publicly documented.
+**PatchGuard (Kernel Patch Protection / KPP)** is Microsoft's anti-rootkit mechanism introduced in 64-bit Windows. It periodically checks critical kernel structures (SSDT, IDT, LSTAR MSR, GDT, ke[...]
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                    PatchGuard Bypass Techniques                      │
 │                                                                      │
 │  ┌─────────────┐   ┌──────────────┐   ┌─────────────────────────┐  │
@@ -790,7 +791,7 @@ Attack flow:
 │  │ not watched │   │ HalPrivate   │   │ to neutralize checks    │  │
 │  │ by KPP      │   │ DispatchTable│   │ before they begin       │  │
 │  └─────────────┘   └──────────────┘   └─────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### GhostHook — Intel PT PMI Handler
@@ -830,10 +831,10 @@ Bypass: Place callback stub in a code cave within LEGITIMATE
 
 ### Concept
 
-Discovered by SafeBreach researcher Alon Leviev and demonstrated at DEF CON 2024. **Windows Downdate** manipulates the Windows Update process itself to **downgrade critical OS components** — including the NT kernel, drivers, and `ci.dll` — effectively resurecting previously patched vulnerabilities on a fully patched system.
+Discovered by SafeBreach researcher Alon Leviev and demonstrated at DEF CON 2024. **Windows Downdate** manipulates the Windows Update process itself to **downgrade critical OS components** — in[...]
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                     Windows Downdate Attack Chain                     │
 │                                                                        │
 │  [Fully patched Windows 11] ──▶ Run Downdate tool                    │
@@ -847,7 +848,7 @@ Discovered by SafeBreach researcher Alon Leviev and demonstrated at DEF CON 2024
 │                                         │                              │
 │                              ┌──────────▼──────────┐                 │
 │                              │  Downgrade ci.dll to │                 │
-│                              │  10.0.22621.1376     │                 │
+│                              │  10.0.22621.1376     │                 ��
 │                              │  (pre-patch version) │                 │
 │                              └──────────┬──────────┘                 │
 │                                         │                              │
@@ -864,7 +865,7 @@ Discovered by SafeBreach researcher Alon Leviev and demonstrated at DEF CON 2024
 │                              │  Load unsigned       │                 │
 │                              │  kernel driver ✓     │                 │
 │                              └──────────────────────┘                 │
-└────────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Steps
@@ -896,10 +897,10 @@ shutdown /r /t 0
 
 ### Concept
 
-Windows registers **kernel callbacks** for process creation, thread creation, image loading, and registry operations. Security products (EDR/AV) use these callbacks heavily. Attackers in Ring 0 can manipulate the callback arrays to remove EDR callbacks or insert malicious ones.
+Windows registers **kernel callbacks** for process creation, thread creation, image loading, and registry operations. Security products (EDR/AV) use these callbacks heavily. Attackers in Ring 0 c[...]
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                  Callback Array Manipulation                        │
 │                                                                     │
 │  PsSetCreateProcessNotifyRoutine callback array:                    │
@@ -913,7 +914,7 @@ Windows registers **kernel callbacks** for process creation, thread creation, im
 │  [2] 0x0000000000000000  ← Nulled                                  │
 │                                                                     │
 │  Result: Process creation events never reach EDR → invisible       │
-└─────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### Callback Removal Steps
@@ -935,7 +936,7 @@ for (int i = 0; i < 64; i++) {
 }
 ```
 
-> **Evasion:** KPP monitors callback arrays in modern Windows builds. To bypass, place stub in code cave of a legitimate driver that redirects to attacker callback — KPP sees a valid address range.
+> **Evasion:** KPP monitors callback arrays in modern Windows builds. To bypass, place stub in code cave of a legitimate driver that redirects to attacker callback — KPP sees a valid address ra[...]
 
 ---
 
@@ -943,10 +944,10 @@ for (int i = 0; i < 64; i++) {
 
 ### Concept
 
-**SMEP (Supervisor Mode Execution Prevention)** prevents kernel-mode code from executing pages mapped in user-mode memory. **SMAP (Supervisor Mode Access Prevention)** prevents kernel-mode from reading user-mode pages at all. These hardware features must be bypassed to execute shellcode placed in user-space from a kernel exploit.
+**SMEP (Supervisor Mode Execution Prevention)** prevents kernel-mode code from executing pages mapped in user-mode memory. **SMAP (Supervisor Mode Access Prevention)** prevents kernel-mode from r[...]
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                    SMEP Bypass via CR4 Bit Clear                   │
 │                                                                     │
 │  Normal state:  CR4.SMEP = 1  (bit 20 set)                        │
@@ -962,7 +963,7 @@ for (int i = 0; i < 64; i++) {
 │  ──▶ Place shellcode in kernel pool (NX bypass needed)            │
 │  ──▶ Use RWX kernel memory or flip NX bit on pool page            │
 │  ──▶ Execute entirely in kernel space                              │
-└─────────────────────────────────────────────────────────────────────┘
+└────────────────────────────────────────────────────────────────[...]
 ```
 
 ### ROP Chain SMEP Disable
@@ -990,159 +991,67 @@ payload += p64(user_shellcode_addr)  # now executable from kernel
 
 ### Concept
 
-Before 2015, Microsoft allowed **cross-signing**: hardware vendors could sign their own root CA, and Microsoft would sign a certificate attesting that the vendor's CA was trusted. Drivers signed under this legacy cross-signing program are still trusted by Windows on existing installations. As of March 2026, Microsoft began removing trust for this program, but the window of exploitation is historically significant.
+Before 2015, Microsoft allowed **cross-signing**: hardware vendors could sign their own root CA, and Microsoft would sign a certificate attesting that the vendor's CA was trusted. Drivers signed [...]
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
+┌────────────────────────────────────────────────────────────────[...]
 │                  Cross-Signed Driver Trust Chain                    │
 │                                                                      │
 │  Legacy (Pre-2015):                                                  │
 │  [Driver] ──signed by──▶ [Vendor CA] ──cross-signed by──▶ [MSFT]  │
-│                                                                      │
-│  Attack surface:                                                     │
-│  ├── Compromise vendor CA private key                               │
-│  ├── Issue new certificates from vendor CA                          │
-│  ├── Sign malicious driver with newly issued cert                   │
-│  └── Windows trusts it via the cross-sign chain                    │
-│                                                                      │
-│  Current status (March 2026):                                        │
-│  Microsoft moving to explicit allowlist — removing blanket trust    │
-│  for cross-signed program certs.                                     │
-└──────────────────────────────────────────────────────────────────────┘
-```
-
-### Check Cross-Signed Status
-
-```powershell
-# Check if a driver uses cross-signed certificate
-$sig = Get-AuthenticodeSignature -FilePath "C:\Windows\System32\drivers\target.sys"
-$sig.SignerCertificate | Format-List Subject, Issuer, NotAfter
-
-# Check Microsoft's current revocation list for cross-signed drivers
-# Updated at: https://aka.ms/VulnerableDriverBlockList
 ```
 
 ---
 
 ## Detection & Defense Matrix
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────┐
-│                        Detection & Defense Reference                               │
-├──────────────────────────────┬─────────────────────────┬───────────────────────────┤
-│       Technique              │     Detection             │      Mitigation           │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ BYOVD                        │ Event ID 7045, 6 (driver  │ Enable Driver Blocklist;  │
-│                              │ install); Sysmon EID 6   │ HVCI; ASR rules           │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ ci.dll Downgrade             │ File integrity monitoring │ VBS + UEFI Lock +         │
-│                              │ on System32; PatchGuard  │ Mandatory flag            │
-│                              │ BSOD if ci.dll tampered  │                           │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ TestSigning Mode             │ BCD store query;         │ Monitor BCD changes;      │
-│                              │ Desktop watermark        │ Restrict bcdedit access   │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ Stolen Cert                  │ Certificate reputation   │ Revoke via CRL/OCSP;      │
-│                              │ check; WHOIS on issuer   │ Monitor new cert issuance │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ DKOM (Token theft)           │ Token field monitoring;  │ HVCI prevents direct      │
-│                              │ PatchGuard protects some │ kernel write w/ HVCI on   │
-│                              │ structures               │                           │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ Pool Overflow / UAF          │ Crash dumps; PageHeap;   │ Patch Tuesday; HVCI;      │
-│                              │ Application Verifier     │ Type Isolation            │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ PatchGuard Bypass            │ Bug Check 0x109 on       │ Enable VBS/HVCI;          │
-│                              │ detection; ETW providers │ Hyper-V isolation         │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ Callback Removal             │ Periodic callback array  │ HVCI makes callback       │
-│                              │ integrity checks (EDR)   │ arrays read-only          │
-├──────────────────────────────┼─────────────────────────┼───────────────────────────┤
-│ Windows Downdate             │ File version monitoring  │ VBS + UEFI Lock is the    │
-│                              │ for ci.dll, ntoskrnl     │ ONLY complete mitigation  │
-└──────────────────────────────┴─────────────────────────┴───────────────────────────┘
-```
-
-### Key Event IDs to Monitor
-
-| Event ID | Source | Meaning |
+| Technique | Detection Method | Defense/Mitigation |
 |---|---|---|
-| **7045** | System | New service installed (driver load) |
-| **6** | Sysmon | Driver loaded |
-| **4688** | Security | New process created (sc.exe, bcdedit) |
-| **4698** | Security | Scheduled task created |
-| **5712** | Security | RPC bind attempt |
-| **4673** | Security | Privilege use (SeLoadDriverPrivilege) |
-| **1102** | Security | Audit log cleared |
-| **7036** | System | Service state changed |
+| WHQL Abuse | Code behavior analysis, kernel hooking | Heuristic analysis, disable unsigned driver load |
+| BYOVD | Vulnerable driver blocklist | Keep blocklist updated, disable admin user load |
+| kdmapper | Kernel memory anomalies, hidden drivers | Kernel integrity checking, HVCI |
+| ci.dll Downgrade | Detect VBS disable + ci.dll replacement | UEFI lock VBS settings, Secure Boot |
+| ItsNotASecBoundary | Race condition detector in ci.dll | Apply KB5041160+, use DSE integrity checks |
+| TestSigning | Registry scan, desktop watermark | GPO: disable bcdedit `/set testsigning`, audit boot config |
+| Kernel Debugger | Debugger detection, KD port scanning | Disable debug mode, physical access controls |
+| F8 Boot Option | Physical access control | UEFI Secure Boot mandatory |
+| Stolen Cert | Revocation list updates, cert pinning | Revoke stolen certs promptly, monitor cert issuance |
+| Fraudulent EV | Threat intel, WHCP submission auditing | EV certificate vetting, fraud prevention |
+| DKOM | Kernel structure checksums, PatchGuard | Enable KPP + HVCI, kernel memory protection |
+| Token Theft | Token history audit, anomalous privilege escalation | Audit token operations, behavioral EDR |
+| Pool Overflow | Kernel heap canaries, exploit mitigations | Segment Heap, Type Isolation, NX Pool |
+| Use-After-Free | Kernel pool tagging, UAF detector | Enable KASAN/MTE, update drivers |
+| Race Condition | Temporal anomaly detection | Fix synchronization bugs, deploy patches |
+| PatchGuard Bypass | KPP integrity monitoring | Modern Windows builds, HVCI enforcement |
+| Windows Downdate | Component version tracking | Secure VBS + UEFI lock, audit WU operations |
+| Callback Hijacking | Callback array checksums | KPP monitoring, code cave detection |
+| SMEP/SMAP Bypass | CR4 bit monitoring, ROP detection | ROP prevention, hypervisor isolation |
+| Cross-Signed Drivers | Certificate chain validation | Microsoft retired program post-2015 |
 
 ---
 
 ## Lab Setup Recommendations
 
-```
-Recommended Lab Architecture for Studying These Techniques:
-┌────────────────────────────────────────────────────────────────┐
-│                       LAB NETWORK                              │
-│                                                                │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────────┐ │
-│  │  Kali Linux  │    │  Windows 11  │    │  Windows Server  │ │
-│  │  (Attacker)  │◄──▶│  Target VM   │◄──▶│  2022 (AD Lab)   │ │
-│  │              │    │  (No HVCI)   │    │  (Domain)        │ │
-│  └──────────────┘    └──────────────┘    └──────────────────┘ │
-│                              │                                 │
-│                     ┌────────▼────────┐                       │
-│                     │  WinDbg Preview │                       │
-│                     │  (KD attached   │                       │
-│                     │   for research) │                       │
-│                     └─────────────────┘                       │
-└────────────────────────────────────────────────────────────────┘
-```
+### Minimum Requirements
 
-### Essential Tools
+- **Host:** Windows 10/11 Pro/Enterprise with VM capability
+- **Guest:** Dedicated isolated VM (no network access during labs)
+- **Kernel:** x64 architecture (all techniques are Ring 0)
+- **Debugger:** WinDbg for kernel inspection
 
-| Tool | Purpose |
-|---|---|
-| **WinDbg Preview** | Kernel debugging, live analysis |
-| **OSR Driver Loader** | Load/unload test drivers |
-| **kdmapper** | Manual kernel mapping via BYOVD |
-| **ldrx64** | Alternative driver loader |
-| **Volatility 3** | Memory forensics on kernel structures |
-| **Process Hacker** | View kernel objects, token inspection |
-| **Sysmon** | Telemetry for driver loads, process creation |
-| **IDA Pro / Ghidra** | Reverse engineer .sys files |
-| **WDK (Windows Driver Kit)** | Build and test kernel drivers |
-| **VirtualKD-Redux** | Fast kernel debugging in VMware/VirtualBox |
+### Recommended Safety Measures
 
-### Recommended Learning Path
+1. **Snapshot frequently** — revert after each technique test
+2. **Air-gapped network** — no internet access to lab machine
+3. **Hardware control** — physical disconnect from network
+4. **Logging & monitoring** — capture all activity for analysis
+5. **Incident response plan** — recovery procedures ready
 
-```
-Level 1 — Foundations
-├── Windows Internals (Russinovich) — Part 1 & 2
-├── WinDbg basics: dt, !process, !thread, lm, !pool
-└── Build a minimal Hello World kernel driver (WDK)
+### Tools & Resources
 
-Level 2 — Driver Security
-├── TestSigning mode + self-signed cert workflow
-├── Analyze a BYOVD driver with IDA/Ghidra
-├── Use kdmapper to load a test driver
-└── Read: lolDrivers.io for vulnerable driver database
-
-Level 3 — Exploitation
-├── DKOM token theft in a controlled VM
-├── Kernel pool spray lab (Windows 10 1903 VM)
-├── Study CVE-2021-21551 (Dell DBUtil) PoC code
-└── CLFS UAF analysis (CVE-2025-32701 write-up)
-
-Level 4 — Advanced
-├── PatchGuard internals (KPP analysis in WinDbg)
-├── InfinityHook source code review
-├── ci.dll downgrade lab (VBS disabled, no HVCI)
-└── Windows Downdate tool analysis and lab replication
-```
-
----
-
-> **Red Nexus** | This document is part of the Kernel Security Research series.
-> Produced for authorized red team training and defensive security education only.
-> All techniques must only be practiced in isolated lab environments with explicit authorization.
+- **kdmapper:** https://github.com/TheCruZ/kdmapper
+- **BYOVD Driver Collection:** Various GitHub repos (use caution)
+- **Windows Driver Kit (WDK):** Microsoft's kernel development suite
+- **WinDbg:** Windows Debugger (`windbg.exe`)
+- **signtool:** Part of Windows SDK
+- **Process Hacker:** Advanced process inspection tool
