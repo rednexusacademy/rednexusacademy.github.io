@@ -1,3 +1,4 @@
+---
 title: "Cobalt Strike Deep Dive: Complete Red Team Field Guide"
 date: 2026-04-28 00:00:00 +0000
 categories: [Red Team, C2]

@@ -1,3 +1,12 @@
+---
+title: "Red Nexus Educational Content** | Kernel Security Research Series"
+description: ""
+date: ""
+categories: []
+tags: []
+mermaid: true
+---
+
 # Windows Kernel Privilege Escalation — 20 Techniques
 
 > **Red Nexus Educational Content** | Kernel Security Research Series
