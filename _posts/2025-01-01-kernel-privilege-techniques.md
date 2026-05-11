@@ -1,7 +1,7 @@
 ---
 title: "Red Nexus Educational Content** | Kernel Security Research Series"
 description: ""
-date: ""
+date: "2026-04-28 00:00:00 +0000"
 categories: []
 tags: []
 mermaid: true
