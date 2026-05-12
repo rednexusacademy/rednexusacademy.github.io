@@ -12,9 +12,6 @@ tags: [windows-kernel, driver-development, rootkit, offensive-security, red-team
 pin: true
 math: true
 mermaid: true
-image:
-  path: /assets/img/posts/kernel-driver-banner.png
-  alt: "Kernel Driver Development Deep Dive"
 toc: true
 comments: true
 ---
