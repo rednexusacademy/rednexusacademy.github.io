@@ -5,9 +5,7 @@ categories: [Technology, Computer Science]
 tags: [computing, beginner, cpu, memory, programming]
 author: dev_blog
 description: "A simple walkthrough of how computers process information — from binary to programs — written for anyone curious about what's happening under the hood."
-image:
-  path: /assets/img/posts/how-computers-think.jpg
-  alt: Circuit board close-up
+
 ---
 
 ## What Does "Thinking" Even Mean for a Machine?
