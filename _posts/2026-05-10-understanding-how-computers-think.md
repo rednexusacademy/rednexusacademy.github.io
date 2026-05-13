@@ -1,6 +1,6 @@
 ---
 title: "Understanding How Computers Think: A Beginner's Guide"
-date: 2026-05-13 20:00:00 +0200
+date: 2026-05-10 20:00:00 +0200
 categories: [Technology, Computer Science]
 tags: [computing, beginner, cpu, memory, programming]
 author: dev_blog
